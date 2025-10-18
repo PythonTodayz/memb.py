@@ -1,30 +1,23 @@
-
 import os
 import requests
 import sys
 import time
 
-# ====== CONFIG ======
+# Fetch bot token from environment
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+if not BOT_TOKEN:
+    print("\033[31m[!] Bot token not found. Make sure TELEGRAM_BOT_TOKEN is set in GitHub Secrets.\033[0m")
+    sys.exit(1)
+
 CHANNEL_ID = "-1002162858751"
 CHANNEL_USERNAME = "@unsely"
+API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
-# ====== COLORS ======
 red = "\033[31m"
 green = "\033[32m"
 cyan = "\033[36m"
 reset = "\033[0m"
 
-# ====== BOT TOKEN ======
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-if not BOT_TOKEN:
-    BOT_TOKEN = input(f"{green}Enter your Telegram Bot Token:{cyan} ").strip()
-    if not BOT_TOKEN:
-        print(f"{red}[!] Bot token not provided. Exiting...{reset}")
-        sys.exit(1)
-
-API = f"https://api.telegram.org/bot{BOT_TOKEN}"
-
-# ====== USER INPUT ======
 def get_user_id():
     while True:
         try:
@@ -32,7 +25,6 @@ def get_user_id():
         except ValueError:
             print(f"{red}Invalid input. Please enter a numeric Telegram User ID.{reset}")
 
-# ====== TELEGRAM CHECK ======
 def get_chat_member(chat, user):
     try:
         r = requests.get(f"{API}/getChatMember", params={"chat_id": chat, "user_id": user}, timeout=10)
@@ -49,7 +41,6 @@ def check_membership(user_id):
         sys.exit(0)
     print(f"{green}[✔] Access Granted. Verified member of {CHANNEL_USERNAME}.{reset}")
 
-# ====== RUN VERIFICATION ======
 print(f"{cyan}Telegram Channel Access Verification{reset}")
 ID = get_user_id()
 print(f"{cyan}Verifying access for User ID: {ID}...{reset}")
@@ -58,5 +49,4 @@ check_membership(ID)
 print(f"{green}Membership verified successfully. You may now use this tool.{reset}")
 time.sleep(0.6)
 
-# ====== REST OF TOOL ======
 print(f"{green}Starting main tool...{reset}")
