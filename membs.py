@@ -1,4 +1,3 @@
-
 import requests, sys, time
 
 BOT_TOKEN = "7391593372:AAFhLbgDhxgNmMZwlLIzB1VuxNnxykV83XQ"
