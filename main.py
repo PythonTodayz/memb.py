@@ -1,10 +1,11 @@
 import os
-from dotenv import load_dotenv
 import requests, sys, time
 
-load_dotenv()  # Load .env variables
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")  # Must be set in GitHub Secrets or OS environment
+if not BOT_TOKEN:
+    print("\033[31m[!] Bot token not found. Set TELEGRAM_BOT_TOKEN in environment variables.\033[0m")
+    sys.exit(1)
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHANNEL_ID = "-1002162858751"
 CHANNEL_USERNAME = "@unsely"
 API = f"https://api.telegram.org/bot{BOT_TOKEN}"
