@@ -1,6 +1,6 @@
-import requests, sys, time
+import os, requests, sys, time
 
-BOT_TOKEN = "7391593372:AAFhLbgDhxgNmMZwlLIzB1VuxNnxykV83XQ"
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHANNEL_ID = "-1002162858751"
 CHANNEL_USERNAME = "@unsely"
 API = f"https://api.telegram.org/bot{BOT_TOKEN}"
