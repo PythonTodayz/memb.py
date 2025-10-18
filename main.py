@@ -5,7 +5,7 @@ import time
 # -------------------------------
 # Vercel API URL
 # -------------------------------
-API_URL = "https://your-vercel-project.vercel.app/api"
+API_URL = "https://bkl-gend-faad-dnga.vercel.app//api"
 
 # -------------------------------
 # Console colors
