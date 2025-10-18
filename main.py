@@ -1,4 +1,8 @@
-import os, requests, sys, time
+import os
+from dotenv import load_dotenv
+import requests, sys, time
+
+load_dotenv()  # Load .env variables
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHANNEL_ID = "-1002162858751"
