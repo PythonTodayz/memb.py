@@ -1,15 +1,19 @@
+
 import requests, sys, time
 
+# ====== CONFIG ======
 BOT_TOKEN = "7391593372:AAFhLbgDhxgNmMZwlLIzB1VuxNnxykV83XQ"
 CHANNEL_ID = "-1002162858751"
 CHANNEL_USERNAME = "@unsely"
 API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
+# ====== COLORS ======
 red = "\033[31m"
 green = "\033[32m"
 cyan = "\033[36m"
 reset = "\033[0m"
 
+# ====== USER INPUT ======
 def get_user_id():
     while True:
         try:
@@ -17,6 +21,7 @@ def get_user_id():
         except ValueError:
             print(f"{red}Invalid input. Please enter a numeric Telegram User ID.{reset}")
 
+# ====== TELEGRAM CHECK ======
 def get_chat_member(chat, user):
     try:
         r = requests.get(f"{API}/getChatMember", params={"chat_id": chat, "user_id": user}, timeout=10)
@@ -29,27 +34,31 @@ def check_membership(user_id):
         data = get_chat_member(chat, user_id)
         if not data.get("ok"):
             err = str(data.get("description", ""))
-            if "PARTICIPANT_ID_INVALID" in err or "chat not found" in err:
-                continue
             print(f"{red}[!] Error checking membership: {err}{reset}")
             sys.exit(1)
         status = data.get("result", {}).get("status", "")
         if status in ("creator", "administrator", "member"):
             print(f"{green}[✔] Access Granted. Verified member of {CHANNEL_USERNAME}.{reset}")
-            return
-        else:
-            print(f"{red}[✖] Access Denied.{reset}")
-            print(f"{cyan}Please join our official Telegram channel {CHANNEL_USERNAME} to continue using this tool.{reset}")
-            print(f"{cyan}Join Link: https://t.me/{CHANNEL_USERNAME.replace('@','')}{reset}")
-            sys.exit(0)
-    print(f"{red}[✖] Unable to verify membership. Ensure the bot is added to the channel and identifiers are correct.{reset}")
-    sys.exit(1)
+            return True
+    print(f"{red}[✖] Access Denied.{reset}")
+    print(f"{cyan}Please join our official Telegram channel {CHANNEL_USERNAME} and restart the tool.{reset}")
+    print(f"{cyan}Join Link: https://t.me/{CHANNEL_USERNAME.replace('@','')}{reset}")
+    sys.exit(0)
 
+# ====== VERIFICATION ======
 print(f"{cyan}Telegram Channel Access Verification{reset}")
 ID = get_user_id()
 print(f"{cyan}Verifying access for User ID: {ID}...{reset}")
 time.sleep(0.6)
 check_membership(ID)
-
 print(f"{green}Membership verified successfully. You may now use this tool.{reset}")
-time.sleep(1)
+time.sleep(0.6)
+
+# ====== REST OF YOUR SCRIPT STARTS BELOW ======
+# Paste your main tool code here. Example:
+
+print(f"{green}Starting main tool...{reset}")
+# Example: any script you want to run after verification
+# ---------------------------------------------
+# import your existing code here, or call functions
+# ---------------------------------------------
