@@ -5,7 +5,7 @@ import time
 # -------------------------------
 # Vercel API URL
 # -------------------------------
-API_URL = "https://bkl-gend-faad-dnga.vercel.app/api/check_membership"
+API_URL = "https://your-vercel-project.vercel.app/api"
 
 # -------------------------------
 # Console colors
@@ -16,7 +16,7 @@ CYAN = "\033[36m"
 RESET = "\033[0m"
 
 # -------------------------------
-# Get User ID from input
+# Get User ID
 # -------------------------------
 def get_user_id():
     while True:
@@ -26,26 +26,21 @@ def get_user_id():
             print(f"{RED}Invalid input. Please enter a numeric Telegram User ID.{RESET}")
 
 # -------------------------------
-# Check membership via Vercel API
+# Check membership via PHP API
 # -------------------------------
 def check_membership(user_id):
     try:
-        # Send GET request to Vercel API
-        response = requests.get(f"{API_URL}?userid={user_id}", timeout=10)
-        data = response.json()
+        # GET request to API
+        response = requests.get(API_URL, params={"userid": user_id}, timeout=10)
+        text = response.text.strip()
     except requests.RequestException as e:
         print(f"{RED}[✖] Failed to reach API: {e}{RESET}")
         sys.exit(1)
-    except ValueError:
-        print(f"{RED}[✖] Invalid response from API{RESET}")
-        sys.exit(1)
 
-    if data.get("ok"):
-        print(f"{GREEN}[✔] Access Granted: {data.get('message', 'Joined')} for channel {data.get('channel')}{RESET}")
+    if "✅" in text:
+        print(f"{GREEN}[✔] Access Granted: {text}{RESET}")
     else:
-        print(f"{RED}[✖] Access Denied: {data.get('message', data.get('description', 'Not joined'))}{RESET}")
-        print(f"{CYAN}Please join the official Telegram channel {data.get('channel', '')}{RESET}")
-        print(f"{CYAN}Join Link: https://t.me/{data.get('channel','').replace('@','')}{RESET}")
+        print(f"{RED}[✖] Access Denied: {text}{RESET}")
         sys.exit(0)
 
 # -------------------------------
