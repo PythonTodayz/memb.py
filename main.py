@@ -2,8 +2,11 @@ import requests
 import sys
 import time
 
-# Updated API endpoint (already includes /api)
+# Updated API endpoint
 API_URL = "https://dumb-members-checker-api.vercel.app/api/"
+
+# Channel name for message
+CHANNEL_NAME = "@unsely"
 
 # Color codes
 RED = "\033[31m"
@@ -20,7 +23,6 @@ def get_user_id():
 
 def check_membership(user_id):
     try:
-        # Make GET request to your Vercel API
         response = requests.get(API_URL, params={"user_id": user_id}, timeout=10)
         response.raise_for_status()
         data = response.json()
@@ -31,12 +33,12 @@ def check_membership(user_id):
         print(f"{RED}[✖] Invalid JSON response from API.{RESET}")
         sys.exit(1)
 
-    # Interpret response from API
+    # Check membership
     if data.get("ok") and data.get("member"):
         print(f"{GREEN}[✔] Access Granted: User is a member ({data.get('status')}){RESET}")
     else:
-        reason = data.get("reason", data.get("status", "unknown"))
-        print(f"{RED}[✖] Access Denied: {reason}{RESET}")
+        # Custom friendly message for all denial reasons
+        print(f"{RED}[✖] Access Denied: Please join required channel {CHANNEL_NAME} so you can use this tool.{RESET}")
         sys.exit(0)
 
 print(f"{CYAN}Telegram Channel Access Verification via Vercel API{RESET}")
