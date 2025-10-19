@@ -2,8 +2,10 @@ import requests
 import sys
 import time
 
-API_URL = "https://bkl-gend-faad-dnga.vercel.app/api"  # <-- must include /api
+# Updated API endpoint (already includes /api)
+API_URL = "https://dumb-members-checker-api.vercel.app/api/"
 
+# Color codes
 RED = "\033[31m"
 GREEN = "\033[32m"
 CYAN = "\033[36m"
@@ -18,16 +20,23 @@ def get_user_id():
 
 def check_membership(user_id):
     try:
-        response = requests.get(API_URL, params={"userid": user_id}, timeout=10)
-        text = response.text.strip()
+        # Make GET request to your Vercel API
+        response = requests.get(API_URL, params={"user_id": user_id}, timeout=10)
+        response.raise_for_status()
+        data = response.json()
     except requests.RequestException as e:
         print(f"{RED}[✖] Failed to reach API: {e}{RESET}")
         sys.exit(1)
+    except ValueError:
+        print(f"{RED}[✖] Invalid JSON response from API.{RESET}")
+        sys.exit(1)
 
-    if "✅" in text:
-        print(f"{GREEN}[✔] Access Granted: {text}{RESET}")
+    # Interpret response from API
+    if data.get("ok") and data.get("member"):
+        print(f"{GREEN}[✔] Access Granted: User is a member ({data.get('status')}){RESET}")
     else:
-        print(f"{RED}[✖] Access Denied: {text}{RESET}")
+        reason = data.get("reason", data.get("status", "unknown"))
+        print(f"{RED}[✖] Access Denied: {reason}{RESET}")
         sys.exit(0)
 
 print(f"{CYAN}Telegram Channel Access Verification via Vercel API{RESET}")
